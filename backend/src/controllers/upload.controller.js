@@ -1,28 +1,21 @@
-const pdfService = require("../services/pdf.service");
-const chunkService = require("../services/chunk.service");
+const ingestionService = require("../services/ingestion.service");
 
 exports.uploadPDF = async (req, res) => {
     try {
+        const result = await ingestionService.ingest(req.file);
 
-        const pdf = await pdfService.extractText(req.file.path);
-
-        const chunks = chunkService.chunkText(pdf.text);
+        console.log("Result:", result);
 
         res.json({
             success: true,
-            pages: pdf.pages,
-            totalChunks: chunks.length,
-            firstChunk: chunks[0]
+            ...result,
         });
-
     } catch (err) {
-
         console.error(err);
 
         res.status(500).json({
             success: false,
-            message: "Failed to process PDF"
+            message: "Failed to process PDF",
         });
-
     }
 };

@@ -6,7 +6,6 @@ const chunkSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Document",
             required: true,
-            index: true,
         },
 
         chunkIndex: {
@@ -37,7 +36,6 @@ const chunkSchema = new mongoose.Schema(
 );
 
 chunkSchema.index({ documentId: 1 });
-
 chunkSchema.index({ chunkIndex: 1 });
 
 module.exports = mongoose.model("Chunk", chunkSchema);

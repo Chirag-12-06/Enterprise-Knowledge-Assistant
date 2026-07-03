@@ -6,6 +6,8 @@ async function extractText(filePath) {
 
     const data = await pdfParse(buffer);
 
+    await fs.promises.unlink(filePath);
+    
     return {
         text: data.text,
         pages: data.numpages,
