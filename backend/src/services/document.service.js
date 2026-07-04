@@ -4,34 +4,34 @@ const Document = require("../models/Document");
 const Chunk = require("../models/Chunk");
 
 async function createDocument(filePath, originalFileName) {
-    const title = path.parse(originalFileName).name;
+  const title = path.parse(originalFileName).name;
 
-    const document = await Document.create({
-        title,
-        originalFileName,
-        uploadedBy: "system",
-    });
-console.log("Created document:", document._id);
-    return document;
+  const document = await Document.create({
+    title,
+    originalFileName,
+    uploadedBy: "system",
+  });
+  console.log("Created document:", document._id);
+  return document;
 }
 
-async function saveChunks(documentId, chunks) {
-    const chunkDocuments = chunks.map((chunk, index) => ({
-        documentId,
-        chunkIndex: index,
-        text: chunk,
-        embedding: [],
-        metadata: {
-            page: null,
-        },
-    }));
+async function saveChunks(documentId, chunks, embeddings) {
+  const chunkDocuments = chunks.map((chunk, index) => ({
+    documentId,
+    chunkIndex: index,
+    text: chunk,
+    embedding: embeddings[index],
+    metadata: {
+      page: null,
+    },
+  }));
 
-    const result = await Chunk.insertMany(chunkDocuments);
-console.log("Saved chunks:", result.length);
-    return result.length;
+  const result = await Chunk.insertMany(chunkDocuments);
+  console.log("Saved chunks:", result.length);
+  return result.length;
 }
 
 module.exports = {
-    createDocument,
-    saveChunks,
+  createDocument,
+  saveChunks,
 };

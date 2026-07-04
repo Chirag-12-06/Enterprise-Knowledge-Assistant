@@ -1,6 +1,7 @@
 const pdfService = require("./pdf.service");
 const chunkService = require("./chunk.service");
 const documentService = require("./document.service");
+const embeddingService = require("./embedding.service");
 const fs = require("fs/promises");
 
 async function ingest(file) {
@@ -9,14 +10,16 @@ async function ingest(file) {
 
     const chunks = chunkService.chunkText(pdf.text);
 
+    const embeddings = await embeddingService.generateEmbeddings(chunks);
+
     const document = await documentService.createDocument(
       file.path,
       file.originalname,
     );
 
-    const totalChunks = await documentService.saveChunks(document._id, chunks);
+    const totalChunks = await documentService.saveChunks(document._id, chunks,embeddings);
 
-    await fs.unlink(file.path);
+    // await fs.unlink(file.path);
 
     return {
       documentId: document._id,
