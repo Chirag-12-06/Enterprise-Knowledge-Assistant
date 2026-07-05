@@ -11,7 +11,6 @@ async function createDocument(filePath, originalFileName) {
     originalFileName,
     uploadedBy: "system",
   });
-  console.log("Created document:", document._id);
   return document;
 }
 
@@ -27,7 +26,6 @@ async function saveChunks(documentId, chunks, embeddings) {
   }));
 
   const result = await Chunk.insertMany(chunkDocuments);
-  console.log("Saved chunks:", result.length);
   return result.length;
 }
 
