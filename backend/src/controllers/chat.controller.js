@@ -10,12 +10,9 @@ exports.search = async (req, res) => {
             });
         }
 
-        const results = await chatService.search(question);
+        const result = await chatService.search(question);
 
-        res.json({
-            question,
-            results,
-        });
+        res.json(result);
     } catch (err) {
         console.error(err);
 

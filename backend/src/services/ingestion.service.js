@@ -19,8 +19,6 @@ async function ingest(file) {
 
     const totalChunks = await documentService.saveChunks(document._id, chunks,embeddings);
 
-    // await fs.unlink(file.path);
-
     return {
       documentId: document._id,
       pages: pdf.pages,
