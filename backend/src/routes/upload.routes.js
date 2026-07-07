@@ -6,7 +6,7 @@ const uploadController = require("../controllers/upload.controller");
 
 router.post(
     "/",
-    upload.single("pdf"),
+    upload.single("file"),
     uploadController.uploadPDF
 );
 
