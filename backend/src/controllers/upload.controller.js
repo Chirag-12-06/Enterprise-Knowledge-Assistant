@@ -19,3 +19,15 @@ exports.uploadPDF = async (req, res) => {
         });
     }
 };
+
+exports.getDocuments = async (req, res) => {
+  try {
+    const documents = await documentService.getDocuments();
+
+    res.json(documents);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};

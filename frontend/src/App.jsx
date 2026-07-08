@@ -1,26 +1,62 @@
 import { useState } from "react";
-import UploadSection from "./components/UploadSection";
-import ChatSection from "./components/ChatSection";
-import AnswerSection from "./components/AnswerSection";
-import SourcesSection from "./components/SourcesSection";
-import RetrievedChunksSection from "./components/RetrievedChunksSection";
+import Header from "./layouts/Header";
+import Sidebar from "./layouts/Sidebar";
+import ChatLayout from "./layouts/ChatLayout";
 
-function App() {
-  const [result, setResult] = useState(null);
+export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      role: "user",
+      content: "What is the leave policy?",
+    },
+    {
+      id: 2,
+      role: "assistant",
+      content: "Employees are entitled to 20 days of annual leave.",
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const sendMessage = () => {
+    if (!input.trim()) return;
+
+    const userMessage = {
+      id: Date.now(),
+      role: "user",
+      content: input,
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+
+    // Backend call will come later
+  };
 
   return (
-    <div>
-      <h1>Enterprise Knowledge Assistant</h1>
+    <div className="flex h-screen bg-slate-50">
+      <Sidebar
+        open={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
+      />
 
-      <UploadSection onUploadSuccess={() => console.log("Uploaded")} />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Header />
 
-      <ChatSection onAnswer={setResult} />
-
-      <AnswerSection answer={result?.answer} />
-      <SourcesSection sources={result?.sources} />
-      <RetrievedChunksSection chunks={result?.retrievedChunks} />
+        <main className="flex-1">
+          <ChatLayout
+            messages={messages}
+            input={input}
+            setInput={setInput}
+            loading={loading}
+            onSend={sendMessage}
+          />
+        </main>
+      </div>
     </div>
   );
 }
-
-export default App;

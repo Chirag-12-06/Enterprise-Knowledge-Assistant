@@ -1,0 +1,91 @@
+import { BrainCircuit, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import AddSourceButton from "../components/sidebar/AddSourceButton";
+import DocumentList from "../components/sidebar/DocumentList";
+import Stats from "../components/sidebar/Stats";
+import FileUpload from "../components/sidebar/FileUpload";
+
+// const documents = [
+//   {
+//     id: 1,
+//     title: "React Handbook",
+//     chunks: 12,
+//   },
+//   {
+//     id: 2,
+//     title: "MongoDB Guide",
+//     chunks: 8,
+//   },
+//   {
+//     id: 3,
+//     title: "AWS Notes",
+//     chunks: 17,
+//   },
+// ];
+const documents = [];
+
+export default function Sidebar({ open, onToggle }) {
+  return (
+    <aside
+      className={`border-r border-slate-200 bg-white transition-all duration-300 ${
+        open ? "w-80" : "w-16"
+      }`}
+    >
+      <div className="flex h-16 items-center justify-between px-3">
+        {/* Logo */}
+        <button
+          onClick={!open ? onToggle : undefined}
+          className="group relative flex h-10 w-10 items-center justify-center rounded-lg hover:bg-slate-100"
+        >
+          {/* Brain */}
+          <BrainCircuit
+            size={22}
+            className={`absolute transition-all duration-200 ${
+              open ? "opacity-100" : "group-hover:opacity-0"
+            }`}
+          />
+
+          {/* Open */}
+          {!open && (
+            <PanelLeftOpen
+              size={22}
+              className="absolute opacity-0 transition-all duration-200 group-hover:opacity-100"
+            />
+          )}
+        </button>
+
+        {/* Close Button */}
+        {open && (
+          <button
+            onClick={onToggle}
+            className="rounded-lg p-2 hover:bg-slate-100"
+          >
+            <PanelLeftClose size={20} />
+          </button>
+        )}
+      </div>
+
+      {open && (
+        <div className="border-t border-slate-200 p-6">
+          <FileUpload
+  onFileSelect={(file) => {
+    console.log(file);
+  }}
+>
+  <AddSourceButton />
+</FileUpload>
+          <div className="mt-8">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Knowledge Base
+            </h2>
+            <div className="space-y-3">
+            <DocumentList documents={documents} />
+            </div>
+            <div className="pt-6">
+            <Stats documents={documents} />
+            </div>
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+}
