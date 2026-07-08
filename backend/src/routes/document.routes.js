@@ -2,15 +2,16 @@ const express = require("express");
 const router = express.Router();
 
 const upload = require("../middleware/upload.middleware");
-const uploadController = require("../controllers/upload.controller");
 const documentController = require("../controllers/document.controller");
 
 router.post(
     "/",
     upload.single("file"),
-    uploadController.uploadPDF
+    documentController.uploadPDF
 );
 
 router.get("/", documentController.getDocuments);
+
+router.delete("/:id", documentController.deleteDocument);
 
 module.exports = router;

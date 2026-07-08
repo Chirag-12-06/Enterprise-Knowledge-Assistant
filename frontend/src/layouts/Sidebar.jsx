@@ -3,27 +3,11 @@ import AddSourceButton from "../components/sidebar/AddSourceButton";
 import DocumentList from "../components/sidebar/DocumentList";
 import Stats from "../components/sidebar/Stats";
 import FileUpload from "../components/sidebar/FileUpload";
-
-// const documents = [
-//   {
-//     id: 1,
-//     title: "React Handbook",
-//     chunks: 12,
-//   },
-//   {
-//     id: 2,
-//     title: "MongoDB Guide",
-//     chunks: 8,
-//   },
-//   {
-//     id: 3,
-//     title: "AWS Notes",
-//     chunks: 17,
-//   },
-// ];
-const documents = [];
+import useDocuments from "../hooks/useDocuments";
 
 export default function Sidebar({ open, onToggle }) {
+  const { documents, loading, uploadAndRefresh, removeDocument } =
+    useDocuments();
   return (
     <aside
       className={`border-r border-slate-200 bg-white transition-all duration-300 ${
@@ -67,21 +51,23 @@ export default function Sidebar({ open, onToggle }) {
       {open && (
         <div className="border-t border-slate-200 p-6">
           <FileUpload
-  onFileSelect={(file) => {
-    console.log(file);
-  }}
->
-  <AddSourceButton />
-</FileUpload>
+            onFileSelect={async (file) => {
+              uploadAndRefresh(file);
+            }}
+          >
+            <AddSourceButton />
+          </FileUpload>
           <div className="mt-8">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               Knowledge Base
             </h2>
             <div className="space-y-3">
-            <DocumentList documents={documents} />
+              <DocumentList 
+              documents={documents} 
+              removeDocument={removeDocument} />
             </div>
             <div className="pt-6">
-            <Stats documents={documents} />
+              <Stats documents={documents} />
             </div>
           </div>
         </div>

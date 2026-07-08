@@ -14,22 +14,27 @@ async function createDocument(filePath, originalFileName) {
   return document;
 }
 
-async function saveChunks(documentId, chunks, embeddings) {
-  const chunkDocuments = chunks.map((chunk, index) => ({
-    documentId,
-    chunkIndex: index,
-    text: chunk,
-    embedding: embeddings[index],
-    metadata: {
-      page: null,
-    },
-  }));
+async function getDocuments() {
+  return await Document.find({}, "title originalFileName chunkCount createdAt").lean();
+}
 
-  const result = await Chunk.insertMany(chunkDocuments);
-  return result.length;
+async function updateChunkCount(documentId, count) {
+  await Document.findByIdAndUpdate(documentId, {
+    chunkCount: count,
+  });
+}
+
+async function deleteDocument(documentId) {
+  await Chunk.deleteMany({
+    documentId,
+  });
+
+  await Document.findByIdAndDelete(documentId);
 }
 
 module.exports = {
   createDocument,
-  saveChunks,
+  getDocuments,
+  updateChunkCount,
+  deleteDocument,
 };

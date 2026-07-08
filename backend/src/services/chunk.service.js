@@ -18,6 +18,22 @@ function chunkText(text, chunkSize = 500, overlap = 100) {
     return chunks;
 }
 
+async function saveChunks(documentId, chunks, embeddings) {
+  const chunkDocuments = chunks.map((chunk, index) => ({
+    documentId,
+    chunkIndex: index,
+    text: chunk,
+    embedding: embeddings[index],
+    metadata: {
+      page: null,
+    },
+  }));
+
+  const result = await Chunk.insertMany(chunkDocuments);
+  return result.length;
+}
+
 module.exports = {
     chunkText,
+    saveChunks,
 };

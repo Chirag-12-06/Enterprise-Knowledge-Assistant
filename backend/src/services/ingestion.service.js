@@ -17,7 +17,13 @@ async function ingest(file) {
       file.originalname,
     );
 
-    const totalChunks = await documentService.saveChunks(document._id, chunks,embeddings);
+    const totalChunks = await chunkService.saveChunks(
+      document._id,
+      chunks,
+      embeddings,
+    );
+
+    await documentService.updateChunkCount(document._id, totalChunks);
 
     return {
       documentId: document._id,

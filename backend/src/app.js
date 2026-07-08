@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const uploadRoutes = require("./routes/upload.routes");
+const documentRoutes = require("./routes/document.routes");
 const chatRoutes = require("./routes/chat.routes");
 
 const app = express();
@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api/upload", uploadRoutes);
+app.use("/api/documents", documentRoutes);
 app.use("/api/chat", chatRoutes);
 
 module.exports = app;

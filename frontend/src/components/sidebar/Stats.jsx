@@ -1,6 +1,6 @@
 export default function Stats({ documents }) {
   const totalChunks = documents.reduce(
-    (sum, doc) => sum + doc.chunks,
+    (sum, doc) => sum + doc.chunkCount,
     0
   );
 

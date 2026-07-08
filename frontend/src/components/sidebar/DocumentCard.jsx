@@ -1,6 +1,7 @@
-import { FileText, MoreHorizontal } from "lucide-react";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import { FileText, MoreVertical, Trash2 } from "lucide-react";
 
-export default function DocumentCard({ title, chunks, status = "Indexed" }) {
+export default function DocumentCard({ title, chunks, status = "Indexed", onDelete }) {
   return (
     <div
       className="
@@ -28,7 +29,7 @@ export default function DocumentCard({ title, chunks, status = "Indexed" }) {
           </div>
         </div>
 
-        <button
+        {/* <button
           className="
             rounded-lg p-1
             opacity-0
@@ -37,8 +38,40 @@ export default function DocumentCard({ title, chunks, status = "Indexed" }) {
             hover:bg-slate-100
           "
         >
-          <MoreHorizontal size={18} />
-        </button>
+          <MoreVertical size={18} />
+        </button> */}
+
+        <Menu as="div" className="relative">
+          <MenuButton
+            className="
+      rounded-lg p-1
+      opacity-0 transition-opacity
+      group-hover:opacity-100
+      hover:bg-slate-100
+    "
+          >
+            <MoreVertical size={18} />
+          </MenuButton>
+
+          <MenuItems
+            anchor="bottom end"
+            className="mt-2 w-40 rounded-lg border border-slate-200 bg-white p-1 shadow-lg"
+          >
+            <MenuItem>
+              {({ active }) => (
+                <button
+                  onClick={onDelete}
+                  className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm ${
+                    active ? "bg-red-50 text-red-600" : ""
+                  }`}
+                >
+                  <Trash2 size={16} />
+                  Delete
+                </button>
+              )}
+            </MenuItem>
+          </MenuItems>
+        </Menu>
       </div>
     </div>
   );

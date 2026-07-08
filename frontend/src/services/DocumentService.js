@@ -5,7 +5,7 @@ export async function uploadDocument(file) {
   formData.append("file", file);
 
   const response = await api.post(
-    "/documents/upload",
+    "/documents",
     formData,
     {
       headers: {
@@ -14,5 +14,15 @@ export async function uploadDocument(file) {
     }
   );
 
+  return response.data;
+}
+
+export async function getDocuments() {
+  const response = await api.get("/documents");
+  return response.data;
+}
+
+export async function deleteDocument(id) {
+  const response = await api.delete(`/documents/${id}`);
   return response.data;
 }

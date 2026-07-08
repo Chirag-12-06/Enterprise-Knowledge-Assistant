@@ -15,7 +15,6 @@ async function startServer() {
         console.log(`Server running on port ${PORT}`);
     });
 
-    console.log(process.cwd());
 }
 
 startServer();
