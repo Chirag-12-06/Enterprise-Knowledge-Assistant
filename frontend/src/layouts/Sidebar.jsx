@@ -4,10 +4,17 @@ import DocumentList from "../components/sidebar/DocumentList";
 import Stats from "../components/sidebar/Stats";
 import FileUpload from "../components/sidebar/FileUpload";
 import useDocuments from "../hooks/useDocuments";
+import ConfirmDialog from "../components/ui/ConfirmDialog";
 
 export default function Sidebar({ open, onToggle }) {
-  const { documents, loading, uploadAndRefresh, removeDocument } =
-    useDocuments();
+  const {
+    documents,
+    loading,
+    uploadAndRefresh,
+    removeDocument,
+    deleteDoc,
+    setDeleteDoc,
+  } = useDocuments();
   return (
     <aside
       className={`border-r border-slate-200 bg-white transition-all duration-300 ${
@@ -62,9 +69,7 @@ export default function Sidebar({ open, onToggle }) {
               Knowledge Base
             </h2>
             <div className="space-y-3">
-              <DocumentList 
-              documents={documents} 
-              removeDocument={removeDocument} />
+              <DocumentList documents={documents} onDelete={setDeleteDoc} />
             </div>
             <div className="pt-6">
               <Stats documents={documents} />
@@ -72,6 +77,17 @@ export default function Sidebar({ open, onToggle }) {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!deleteDoc}
+        title="Delete document?"
+        documentName={deleteDoc?.title}
+        onCancel={() => setDeleteDoc(null)}
+        onConfirm={async () => {
+          await removeDocument(deleteDoc._id);
+          setDeleteDoc(null);
+        }}
+      />
     </aside>
   );
 }

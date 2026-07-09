@@ -1,21 +1,21 @@
+const Chunk = require("../models/Chunk");
+
 function chunkText(text, chunkSize = 500, overlap = 100) {
-    const words = text.split(/\s+/);
+  const words = text.split(/\s+/);
 
-    const chunks = [];
+  const chunks = [];
 
-    let index = 0;
+  let index = 0;
 
-    while (index < words.length) {
-        const chunk = words
-            .slice(index, index + chunkSize)
-            .join(" ");
+  while (index < words.length) {
+    const chunk = words.slice(index, index + chunkSize).join(" ");
 
-        chunks.push(chunk);
+    chunks.push(chunk);
 
-        index += chunkSize - overlap;
-    }
+    index += chunkSize - overlap;
+  }
 
-    return chunks;
+  return chunks;
 }
 
 async function saveChunks(documentId, chunks, embeddings) {
@@ -34,6 +34,6 @@ async function saveChunks(documentId, chunks, embeddings) {
 }
 
 module.exports = {
-    chunkText,
-    saveChunks,
+  chunkText,
+  saveChunks,
 };

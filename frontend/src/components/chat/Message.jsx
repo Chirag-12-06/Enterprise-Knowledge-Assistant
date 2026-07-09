@@ -1,6 +1,13 @@
-const Message = ({ message }) => {
-  const isUser = message.role === "user";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
+const Message = ({ message }) => {
+  const [showChunks, setShowChunks] = useState(false);
+  const isUser = message.role === "user";
+  const uniqueDocuments = [
+    ...new Set(message.sources?.map((s) => s.document) || []),
+  ];
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
@@ -10,7 +17,63 @@ const Message = ({ message }) => {
             : "border border-slate-200 bg-white text-slate-800"
         }`}
       >
-        <p className="whitespace-pre-wrap">{message.content}</p>
+        {message.role === "assistant" ? (
+          <div className="prose prose-sm max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {message.content}
+            </ReactMarkdown>
+          </div>
+        ) : (
+          <p>{message.content}</p>
+        )}
+        {message.role === "assistant" &&
+          message.sources &&
+          message.sources.length > 0 && (
+            <button
+              onClick={() => setShowChunks((prev) => !prev)}
+              className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-700"
+            >
+              📄 Sources ({uniqueDocuments.length})
+            </button>
+          )}
+        {showChunks && (
+          <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            {message.retrievedChunks.map((chunk, index) => (
+              <div
+                key={index}
+                className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">
+                      📄 {chunk.document}
+                    </h4>
+
+                    <p className="mt-1 text-xs text-slate-500">
+                      Chunk #{chunk.chunk}
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="text-xs uppercase tracking-wide text-slate-500">
+                      Similarity
+                    </p>
+
+                    <span className="font-semibold text-blue-600">
+                      {Math.round(chunk.score * 100)}%
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-lg bg-slate-50 p-3">
+                  <p className="text-sm leading-6 text-slate-700">
+                    {chunk.text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -50,7 +50,12 @@ async function search(question) {
 
   // Reject unrelated questions
   if (results.length === 0 || results[0].score < 0.75) {
-    return [];
+    return {
+  answer:
+    "I couldn't find relevant information in the uploaded documents to answer that question.",
+  sources: [],
+  retrievedChunks: [],
+};
   }
 
   const relevantChunks = results.filter((chunk) => chunk.score >= 0.8);

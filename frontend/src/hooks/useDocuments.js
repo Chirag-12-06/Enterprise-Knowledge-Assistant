@@ -4,6 +4,7 @@ import { uploadDocument, getDocuments, deleteDocument } from "../services/docume
 export default function useDocuments() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteDoc, setDeleteDoc] = useState(null);
 
   async function refreshDocuments() {
     try {
@@ -37,5 +38,7 @@ export default function useDocuments() {
     loading,
     uploadAndRefresh,
     removeDocument,
+    deleteDoc,
+    setDeleteDoc,
   };
 }

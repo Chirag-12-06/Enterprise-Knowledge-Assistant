@@ -1,7 +1,7 @@
 import DocumentCard from "./DocumentCard";
 import EmptyKnowledgeBase from "./EmptyKnowledgeBase";
 
-export default function DocumentList({ documents, removeDocument }) {
+export default function DocumentList({ documents, onDelete }) {
   if (documents.length === 0) {
     return <EmptyKnowledgeBase />;
   }
@@ -11,8 +11,9 @@ export default function DocumentList({ documents, removeDocument }) {
         <DocumentCard
           key={doc.id}
           title={doc.title}
-          chunks={doc.chunks}
-          onDelete={() => removeDocument(doc._id)}
+          chunks={doc.chunkCount}
+          status={doc.status}
+          onDelete={() => onDelete(doc)}
         />
       ))}
     </div>
