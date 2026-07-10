@@ -3,6 +3,6 @@ const router = express.Router();
 
 const chatController = require("../controllers/chat.controller");
 
-router.post("/search", chatController.search);
+router.post("/:conversationId", chatController.search);
 
 module.exports = router;

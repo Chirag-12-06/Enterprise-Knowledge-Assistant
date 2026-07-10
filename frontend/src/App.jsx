@@ -9,10 +9,25 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [conversationId, setConversationId] = useState(null);
+
+  const createConversation = async () => {
+    const response = await api.post("/conversations");
+
+    setConversationId(response.data._id);
+
+    return response.data._id;
+  };
 
   const sendMessage = async () => {
     const question = input.trim();
     if (!question) return;
+
+    let id = conversationId;
+
+    if (!id) {
+      id = await createConversation();
+    }
 
     const userMessage = {
       id: Date.now(),
@@ -26,7 +41,7 @@ export default function App() {
     setLoading(true);
 
     try {
-      const response = await api.post("/chat/search", {
+      const response = await api.post(`/chat/${id}`, {
         question,
       });
 
@@ -39,7 +54,7 @@ export default function App() {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
+    } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);

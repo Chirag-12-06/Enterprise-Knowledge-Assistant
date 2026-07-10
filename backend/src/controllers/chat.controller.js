@@ -3,6 +3,7 @@ const chatService = require("../services/chat.service");
 exports.search = async (req, res) => {
     try {
         const { question } = req.body;
+        const { conversationId } = req.params;
 
         if (!question) {
             return res.status(400).json({
@@ -10,7 +11,7 @@ exports.search = async (req, res) => {
             });
         }
 
-        const result = await chatService.search(question);
+        const result = await chatService.search(question, conversationId);
 
         res.json(result);
     } catch (err) {

@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const documentRoutes = require("./routes/document.routes");
 const chatRoutes = require("./routes/chat.routes");
+const conversationRoutes = require("./routes/conversation.routes");
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/documents", documentRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/conversations", conversationRoutes);
 
 module.exports = app;
