@@ -1,9 +1,14 @@
 import { useRef } from "react";
 
-export default function FileUpload({ children, onFileSelect }) {
+export default function FileUpload({
+  children,
+  onFileSelect,
+  disabled = false,
+}) {
   const inputRef = useRef(null);
 
   const handleClick = () => {
+    if (disabled) return;
     inputRef.current?.click();
   };
 
@@ -14,7 +19,6 @@ export default function FileUpload({ children, onFileSelect }) {
 
     onFileSelect(file);
 
-    // Allow selecting the same file again
     e.target.value = "";
   };
 
@@ -26,11 +30,10 @@ export default function FileUpload({ children, onFileSelect }) {
         accept=".pdf"
         hidden
         onChange={handleChange}
+        disabled={disabled}
       />
 
-      <div onClick={handleClick}>
-        {children}
-      </div>
+      <div onClick={handleClick}>{children}</div>
     </>
   );
 }

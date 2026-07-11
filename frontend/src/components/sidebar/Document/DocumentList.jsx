@@ -1,5 +1,5 @@
 import DocumentCard from "./DocumentCard";
-import EmptyKnowledgeBase from "./EmptyKnowledgeBase";
+import EmptyKnowledgeBase from "../Empty/EmptyKnowledgeBase";
 
 export default function DocumentList({ documents, onDelete }) {
   if (documents.length === 0) {

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import ThinkingBubble from "../animations/ThinkingBubble";
+import { Copy, Check } from "lucide-react";
 
 const Message = ({ message }) => {
   const [showChunks, setShowChunks] = useState(false);
@@ -8,36 +10,57 @@ const Message = ({ message }) => {
   const uniqueDocuments = [
     ...new Set(message.sources?.map((s) => s.document) || []),
   ];
+  const [copied, setCopied] = useState(false);
+
+  const copyMessage = async () => {
+    await navigator.clipboard.writeText(message.content);
+    setCopied(true);
+
+    setTimeout(() => setCopied(false), 1000);
+  };
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-sm ${
+        className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-sm animate-message ${
           isUser
             ? "bg-blue-600 text-white"
             : "border border-slate-200 bg-white text-slate-800"
         }`}
       >
-        {message.role === "assistant" ? (
-          <div className="prose prose-sm max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {message.content}
-            </ReactMarkdown>
-          </div>
+        {message.loading ? (
+          <ThinkingBubble />
+        ) : message.role === "assistant" ? (
+          <>
+            <div className="prose prose-sm max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {message.content}
+              </ReactMarkdown>
+            </div>
+          </>
         ) : (
           <p>{message.content}</p>
         )}
         {message.role === "assistant" &&
           message.sources &&
           message.sources.length > 0 && (
-            <button
-              onClick={() => setShowChunks((prev) => !prev)}
-              className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-700"
-            >
-              📄 Sources ({uniqueDocuments.length})
-            </button>
+            <div className="mt-4 flex items-center justify-between">
+              <button
+                onClick={() => setShowChunks((prev) => !prev)}
+                className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
+              >
+                📄 Sources ({uniqueDocuments.length})
+              </button>
+
+              <button
+                onClick={copyMessage}
+                className="flex items-center gap-2 rounded-lg px-2 py-1 text-sm text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+              >
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+              </button>
+            </div>
           )}
-        {showChunks && (
-          <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+        {showChunks && message.retrievedChunks?.length > 0 && (
+          <div className="animate-expand mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
             {message.retrievedChunks.map((chunk, index) => (
               <div
                 key={index}

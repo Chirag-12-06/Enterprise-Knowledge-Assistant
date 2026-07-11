@@ -5,7 +5,7 @@ export default function Stats({ documents }) {
   );
 
   return (
-    <div className="border-t border-slate-200 p-4">
+    <div>
       <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
         Statistics
       </h2>

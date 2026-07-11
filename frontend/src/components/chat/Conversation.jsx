@@ -18,7 +18,7 @@ const Conversation = ({ messages, loading }) => {
         <Message
           message={{
             role: "assistant",
-            content: "Thinking...",
+            loading: true,
           }}
         />
       )}

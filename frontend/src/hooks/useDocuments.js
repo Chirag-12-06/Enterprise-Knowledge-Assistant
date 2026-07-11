@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { uploadDocument, getDocuments, deleteDocument } from "../services/documentService";
+import { uploadDocument, getDocuments, deleteDocument } from "../services/document.service";
+import { toast } from "sonner";
 
 export default function useDocuments() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteDoc, setDeleteDoc] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   async function refreshDocuments() {
     try {
@@ -16,16 +18,22 @@ export default function useDocuments() {
   }
 
   async function uploadAndRefresh(file) {
+    setUploading(true);
     try {
       await uploadDocument(file);
+      toast.success("Document uploaded successfully");
       await refreshDocuments();
     } catch (err) {
       console.error(err);
-    }
+      toast.error("Failed to upload document");
+    } finally {
+    setUploading(false);
+  }
   }
 
   async function removeDocument(id) {
   await deleteDocument(id);
+  toast.success("Document deleted successfully");
   await refreshDocuments();
 }
 
@@ -40,5 +48,6 @@ export default function useDocuments() {
     removeDocument,
     deleteDoc,
     setDeleteDoc,
+    uploading,
   };
 }

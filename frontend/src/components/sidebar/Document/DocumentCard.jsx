@@ -22,14 +22,16 @@ export default function DocumentCard({
           <div className="flex h-10 w-10 items-center justify-center self-start rounded-lg bg-blue-100">
             <FileText size={20} className="text-blue-600" />
           </div>
-
-          <div className="min-w-0 flex-1 pr-10 group-hover:pr-12 transition-all">
+          <div className="min-w-0 flex-1 pr-10 transition-all group-hover:pr-12">
             <h3 className="truncate font-medium text-slate-800">{title}</h3>
+            <div className="mt-1 flex items-center gap-2 text-xs text-slate-500">
+              
+              <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-medium text-green-700">
+                {status}
+              </span>
 
-            <p className="mt-1 text-xs text-slate-500">{chunks} chunks</p>
-            <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-medium text-green-700">
-              {status}
-            </span>
+              <span>{chunks} chunks</span>
+            </div>
           </div>
         </div>
         <Menu>

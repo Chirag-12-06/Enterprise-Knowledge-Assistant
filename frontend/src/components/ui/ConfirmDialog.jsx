@@ -3,7 +3,9 @@ import { AlertTriangle, FileText } from "lucide-react";
 export default function ConfirmDialog({
   open,
   title,
-  documentName,
+  itemLabel,
+  itemName,
+  consequences = [],
   confirmText = "Delete",
   cancelText = "Cancel",
   onConfirm,
@@ -12,7 +14,7 @@ export default function ConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
 
         {/* Warning Icon */}
@@ -26,7 +28,7 @@ export default function ConfirmDialog({
         </h2>
 
         {/* Document Card */}
-        {documentName && (
+        {itemName && (
           <div className="mt-5 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
               <FileText className="text-blue-600" size={18} />
@@ -34,11 +36,11 @@ export default function ConfirmDialog({
 
             <div>
               <p className="text-xs uppercase tracking-wide text-slate-500">
-                Document
+                {itemLabel}
               </p>
 
               <p className="font-medium text-slate-800">
-                {documentName}
+                {itemName}
               </p>
             </div>
           </div>
@@ -51,10 +53,10 @@ export default function ConfirmDialog({
           </p>
 
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600">
-            <li>Document</li>
-            <li>All text chunks</li>
-            <li>Generated embeddings</li>
-          </ul>
+  {consequences.map((item) => (
+    <li key={item}>{item}</li>
+  ))}
+</ul>
 
           <p className="mt-4 text-sm font-medium text-red-600">
             This action cannot be undone.

@@ -11,7 +11,7 @@ export default function EmptyKnowledgeBase() {
         No sources added yet
       </h3>
 
-      <p className="mt-2 max-w-[220px] text-xs text-slate-500">
+      <p className="mt-2 max-w-55 text-xs text-slate-500">
         Upload your first PDF to start building your knowledge base.
       </p>
     </div>

@@ -1,11 +1,9 @@
 const Conversation = require("../models/Conversation");
+const Message = require("../models/Message");
 
 exports.createConversation = async (req, res) => {
-  console.log("Request received");
   try {
-    console.log("Creating...");
     const conversation = await Conversation.create({});
-    console.log("Created");
     return res.status(201).json(conversation);
   } catch (err) {
     console.error(err);
@@ -38,7 +36,29 @@ exports.getMessages = async (req, res) => {
     console.error(err);
 
     res.status(500).json({
-      message: "Failed to load messages",
+      message: "Failed to fetch messages",
+    });
+  }
+};
+
+exports.deleteConversation = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    await Conversation.findByIdAndDelete(conversationId);
+
+    await Message.deleteMany({
+      conversationId,
+    });
+
+    res.json({
+      message: "Conversation deleted",
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: "Delete failed",
     });
   }
 };

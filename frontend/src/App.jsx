@@ -1,64 +1,46 @@
 import { useState } from "react";
+import useChat from "./hooks/useChat";
+import useConversations from "./hooks/useConversations";
+import ChatLayout from "./layouts/ChatLayout";
 import Header from "./layouts/Header";
 import Sidebar from "./layouts/Sidebar";
-import ChatLayout from "./layouts/ChatLayout";
-import api from "./services/api";
 
 export default function App() {
+  const {
+    conversations,
+    activeConversationId,
+    handleNewChat,
+    handleConversationSelect,
+    handleDeleteConversation,
+    createConversation,
+    fetchConversations,
+  } = useConversations();
+
+  const {
+    input,
+    setInput,
+    loading,
+    sendMessage,
+    messages,
+    loadMessages,
+    newChat,
+  } = useChat({
+    activeConversationId,
+    createConversation,
+    fetchConversations,
+  });
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [conversationId, setConversationId] = useState(null);
+  const [conversationToDelete, setConversationToDelete] = useState(null);
 
-  const createConversation = async () => {
-    const response = await api.post("/conversations");
-
-    setConversationId(response.data._id);
-
-    return response.data._id;
+  const onConversationSelect = async (id) => {
+    handleConversationSelect(id);
+    await loadMessages(id);
   };
 
-  const sendMessage = async () => {
-    const question = input.trim();
-    if (!question) return;
-
-    let id = conversationId;
-
-    if (!id) {
-      id = await createConversation();
-    }
-
-    const userMessage = {
-      id: Date.now(),
-      role: "user",
-      content: question,
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-
-    setLoading(true);
-
-    try {
-      const response = await api.post(`/chat/${id}`, {
-        question,
-      });
-
-      const assistantMessage = {
-        id: Date.now() + 1,
-        role: "assistant",
-        content: response.data.answer,
-        sources: response.data.sources,
-        retrievedChunks: response.data.retrievedChunks,
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+  const onNewChat = () => {
+    handleNewChat();
+    newChat();
   };
 
   return (
@@ -66,6 +48,13 @@ export default function App() {
       <Sidebar
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        conversations={conversations}
+        activeConversationId={activeConversationId}
+        onSelectConversation={onConversationSelect}
+        onNewChat={onNewChat}
+        conversationToDelete={conversationToDelete}
+        onDeleteConversation={handleDeleteConversation}
+        setConversationToDelete={setConversationToDelete}
       />
 
       <div className="flex flex-1 flex-col overflow-hidden">

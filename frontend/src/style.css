@@ -1,8 +1,41 @@
 @import "tailwindcss";
+/* stylelint-disable-next-line at-rule-no-unknown */
 @plugin "@tailwindcss/typography";
 
 html,
 body,
 #root {
   height: 100%;
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-message {
+  animation: messageIn 0.25s ease-out;
+}
+
+@keyframes expand {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-expand {
+  animation: expand 0.2s ease-out;
 }

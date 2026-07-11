@@ -1,12 +1,25 @@
 import { BrainCircuit, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+
 import AddSourceButton from "../components/sidebar/AddSourceButton";
-import DocumentList from "../components/sidebar/DocumentList";
-import Stats from "../components/sidebar/Stats";
+import ChatList from "../components/sidebar/Chat/ChatList";
+import DocumentList from "../components/sidebar/Document/DocumentList";
 import FileUpload from "../components/sidebar/FileUpload";
-import useDocuments from "../hooks/useDocuments";
+import Stats from "../components/sidebar/Stats";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
 
-export default function Sidebar({ open, onToggle }) {
+import useDocuments from "../hooks/useDocuments";
+
+export default function Sidebar({
+  open,
+  onToggle,
+  conversations,
+  activeConversationId,
+  onSelectConversation,
+  onNewChat,
+  conversationToDelete,
+  onDeleteConversation,
+  setConversationToDelete,
+}) {
   const {
     documents,
     loading,
@@ -14,6 +27,7 @@ export default function Sidebar({ open, onToggle }) {
     removeDocument,
     deleteDoc,
     setDeleteDoc,
+    uploading,
   } = useDocuments();
   return (
     <aside
@@ -58,20 +72,57 @@ export default function Sidebar({ open, onToggle }) {
       {open && (
         <div className="border-t border-slate-200 p-6">
           <FileUpload
-            onFileSelect={async (file) => {
-              uploadAndRefresh(file);
-            }}
+          disabled={uploading}
+            onFileSelect={uploadAndRefresh}
           >
-            <AddSourceButton />
+            <AddSourceButton
+              uploading={uploading}
+            />
           </FileUpload>
-          <div className="mt-8">
+          <div className="mt-8 space-y-8">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               Knowledge Base
             </h2>
             <div className="space-y-3">
               <DocumentList documents={documents} onDelete={setDeleteDoc} />
             </div>
-            <div className="pt-6">
+            <div className="space-y-4">
+              <button
+                onClick={() => {
+                  console.log("New Chat clicked");
+                  onNewChat();
+                }}
+                className="
+        flex w-full items-center justify-center gap-2
+        rounded-xl border-2 border-dashed border-slate-300
+        bg-slate-50
+        px-4 py-3
+        text-slate-600
+        transition-all
+        hover:border-blue-500
+        hover:bg-blue-50
+        hover:text-blue-600
+      "
+              >
+                New Chat
+              </button>
+
+              <div>
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Conversations
+                </h2>
+
+                <ChatList
+                  conversations={conversations}
+                  activeConversationId={activeConversationId}
+                  onSelectConversation={onSelectConversation}
+                  onDelete={(conversation) => {
+                    setConversationToDelete(conversation);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <Stats documents={documents} />
             </div>
           </div>
@@ -81,11 +132,25 @@ export default function Sidebar({ open, onToggle }) {
       <ConfirmDialog
         open={!!deleteDoc}
         title="Delete document?"
-        documentName={deleteDoc?.title}
+        itemLabel="Document"
+        itemName={deleteDoc?.title}
+        consequences={["Document", "All text chunks", "Generated embeddings"]}
         onCancel={() => setDeleteDoc(null)}
         onConfirm={async () => {
           await removeDocument(deleteDoc._id);
           setDeleteDoc(null);
+        }}
+      />
+      <ConfirmDialog
+        open={!!conversationToDelete}
+        title="Delete conversation?"
+        itemLabel="Conversation"
+        itemName={conversationToDelete?.title}
+        consequences={["Conversation", "All messages"]}
+        onCancel={() => setConversationToDelete(null)}
+        onConfirm={async () => {
+          await onDeleteConversation(conversationToDelete._id);
+          setConversationToDelete(null);
         }}
       />
     </aside>
