@@ -22,7 +22,6 @@ export default function Sidebar({
 }) {
   const {
     documents,
-    loading,
     uploadAndRefresh,
     removeDocument,
     deleteDoc,
