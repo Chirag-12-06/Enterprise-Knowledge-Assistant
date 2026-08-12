@@ -26,18 +26,27 @@
 # embedding_service = EmbeddingService()
 
 
+print("EMBEDDING SERVICE: FILE START", flush=True)
+
 from sentence_transformers import SentenceTransformer
+
+print("EMBEDDING SERVICE: SENTENCE TRANSFORMERS IMPORTED", flush=True)
 
 
 class EmbeddingService:
     def __init__(self):
+        print("EMBEDDING SERVICE: INIT", flush=True)
         self.model = None
 
     def load_model(self):
         if self.model is None:
-            print("Loading embedding model...", flush=True)
-            self.model = SentenceTransformer("all-MiniLM-L6-v2")
-            print("Embedding model loaded.", flush=True)
+            print("EMBEDDING SERVICE: LOADING MODEL", flush=True)
+
+            self.model = SentenceTransformer(
+                "all-MiniLM-L6-v2"
+            )
+
+            print("EMBEDDING SERVICE: MODEL LOADED", flush=True)
 
     def health(self):
         return {
@@ -55,4 +64,8 @@ class EmbeddingService:
         return embeddings.tolist()
 
 
+print("EMBEDDING SERVICE: CREATING INSTANCE", flush=True)
+
 embedding_service = EmbeddingService()
+
+print("EMBEDDING SERVICE: READY", flush=True)
