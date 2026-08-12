@@ -25,14 +25,25 @@
 #     )
 
 
+# from fastapi import FastAPI
+
+# app = FastAPI(
+#     title="Embedding Service",
+#     version="1.0.0"
+# )
+
+
+# @app.get("/")
+# def health():
+#     return {"status": "running"}
+
+
 from fastapi import FastAPI
 
-app = FastAPI(
-    title="Embedding Service",
-    version="1.0.0"
-)
-
+app = FastAPI()
 
 @app.get("/")
 def health():
     return {"status": "running"}
+
+print("APP FILE LOADED", flush=True)
