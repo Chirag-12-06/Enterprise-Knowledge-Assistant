@@ -31,17 +31,22 @@ from sentence_transformers import SentenceTransformer
 
 class EmbeddingService:
     def __init__(self):
-        print("1. STARTING EMBEDDING SERVICE", flush=True)
+        self.model = None
 
-        print("2. LOADING MODEL", flush=True)
-        self.model = SentenceTransformer("all-MiniLM-L6-v2")
-
-        print("3. MODEL LOADED", flush=True)
+    def load_model(self):
+        if self.model is None:
+            print("Loading embedding model...", flush=True)
+            self.model = SentenceTransformer("all-MiniLM-L6-v2")
+            print("Embedding model loaded.", flush=True)
 
     def health(self):
-        return {"status": "running"}
+        return {
+            "status": "running"
+        }
 
     def generate_embeddings(self, texts: list[str]):
+        self.load_model()
+
         embeddings = self.model.encode(
             texts,
             convert_to_numpy=True
@@ -50,8 +55,4 @@ class EmbeddingService:
         return embeddings.tolist()
 
 
-print("0. IMPORTING EMBEDDING SERVICE", flush=True)
-
 embedding_service = EmbeddingService()
-
-print("4. EMBEDDING SERVICE READY", flush=True)
