@@ -71,15 +71,31 @@
 # print("EMBEDDING SERVICE: READY", flush=True)
 
 
+import sys
+
+
 print("EMBEDDING SERVICE: FILE START", flush=True)
+
+print("PYTHON:", sys.version, flush=True)
 
 import torch
 
 print("TORCH IMPORTED", flush=True)
+print("TORCH VERSION:", torch.__version__, flush=True)
 
-from transformers import AutoTokenizer, AutoModel
+import transformers
 
 print("TRANSFORMERS IMPORTED", flush=True)
+print("TRANSFORMERS VERSION:", transformers.__version__, flush=True)
+
+import sentence_transformers
+
+print("SENTENCE TRANSFORMERS IMPORTED", flush=True)
+print(
+    "SENTENCE TRANSFORMERS VERSION:",
+    sentence_transformers.__version__,
+    flush=True
+)
 
 
 class EmbeddingService:
