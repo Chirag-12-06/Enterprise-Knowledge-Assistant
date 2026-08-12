@@ -1,4 +1,4 @@
-# RAG Chat Application
+# Enterprise Knowledge Assistance
 
 A Retrieval-Augmented Generation (RAG) application that allows users to upload documents, process their content into vector embeddings, and interact with them through a context-aware conversational interface.
 
