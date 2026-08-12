@@ -16,7 +16,6 @@ def health():
 
 @app.post("/embed", response_model=EmbedResponse)
 def embed(request: EmbedRequest):
-
     embeddings = embedding_service.generate_embeddings(
         request.texts
     )

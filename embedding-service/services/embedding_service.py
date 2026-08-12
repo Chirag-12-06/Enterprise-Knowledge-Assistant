@@ -1,18 +1,45 @@
+# from sentence_transformers import SentenceTransformer
+
+
+# class EmbeddingService:
+#     def __init__(self):
+#         print("Loading embedding model...")
+
+#         self.model = SentenceTransformer("all-MiniLM-L6-v2")
+
+#         print("Embedding model loaded.")
+
+#     def health(self):
+#         return {
+#             "status": "running"
+#         }
+
+#     def generate_embeddings(self, texts: list[str]):
+#         embeddings = self.model.encode(
+#             texts,
+#             convert_to_numpy=True
+#         )
+
+#         return embeddings.tolist()
+
+
+# embedding_service = EmbeddingService()
+
+
 from sentence_transformers import SentenceTransformer
 
 
 class EmbeddingService:
     def __init__(self):
-        print("Loading embedding model...")
+        print("STARTING EMBEDDING SERVICE", flush=True)
 
+        print("LOADING MODEL", flush=True)
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
-        print("Embedding model loaded.")
+        print("MODEL LOADED", flush=True)
 
     def health(self):
-        return {
-            "status": "running"
-        }
+        return {"status": "running"}
 
     def generate_embeddings(self, texts: list[str]):
         embeddings = self.model.encode(
@@ -24,4 +51,3 @@ class EmbeddingService:
 
 
 embedding_service = EmbeddingService()
-
