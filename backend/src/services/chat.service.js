@@ -5,6 +5,12 @@ const Message = require("../models/Message");
 const Conversation = require("../models/Conversation");
 
 async function search(question, conversationId) {
+  const history = await Message.find({
+  conversationId,
+})
+  .sort({ createdAt: 1 })
+  .limit(10);
+
   await Message.create({
     conversationId,
     role: "user",
@@ -84,7 +90,7 @@ if (userMessageCount === 1) {
 
     const context = relevantChunks.map((chunk) => chunk.text).join("\n\n");
 
-    const answer = await generateAnswer(question, context);
+    const answer = await generateAnswer(question, contex, history);
 
     response = {
       answer,

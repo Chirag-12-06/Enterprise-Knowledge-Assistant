@@ -1,24 +1,37 @@
-function buildRagPrompt(question, context) {
-    return `
-You are an AI assistant.
+function buildRagPrompt(question, context, history = []) {
+  const conversation = history
+    .map(
+      (message) =>
+        `${message.role}: ${message.content}`
+    )
+    .join("\n");
 
-Answer ONLY using the provided context.
+  return `
+You are an enterprise knowledge assistant.
 
-Instructions:
-- Give a detailed answer.
-- If the answer isn't in the context, reply:
-  "I couldn't find that information in the uploaded documents."
-- Don't make assumptions.
-- Format the answer using paragraphs and bullet points when appropriate.
+Use the provided knowledge base context to answer
+the user's question.
 
-Context:
+Conversation history:
+${conversation}
+
+Relevant knowledge base:
 ${context}
 
-Question:
+Current question:
 ${question}
+
+Instructions:
+- Use conversation history to understand references
+  to previous messages.
+- Use the knowledge base as the source of factual
+  information.
+- Do not invent information.
+- If the answer is not present in the knowledge base,
+  say that you could not find the information.
 `;
 }
 
 module.exports = {
-    buildRagPrompt,
+  buildRagPrompt,
 };

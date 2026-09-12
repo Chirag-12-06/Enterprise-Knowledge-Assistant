@@ -30,3 +30,6 @@ venv/
 # Build folders
 dist/
 build/
+
+
+embedding-service/services/.python-version
