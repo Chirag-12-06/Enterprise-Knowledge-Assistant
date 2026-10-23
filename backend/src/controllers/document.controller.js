@@ -2,21 +2,32 @@ const ingestionService = require("../services/ingestion.service");
 const documentService = require("../services/document.service");
 
 exports.uploadPDF = async (req, res) => {
-    try {
-        const result = await ingestionService.ingest(req.file);
+  try {
+    const result = await ingestionService.ingest(req.file);
 
-        res.json({
-            success: true,
-            ...result,
-        });
-    } catch (err) {
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to process PDF",
-        });
+    if (result.duplicate) {
+      return res.status(409).json({
+        success: false,
+        duplicate: true,
+        message: "This document has already been uploaded.",
+        documentId: result.documentId,
+      });
     }
+
+    return res.status(201).json({
+      success: true,
+      duplicate: false,
+      message: "Document uploaded and processed successfully.",
+      ...result,
+    });
+  } catch (err) {
+    console.error("[UPLOAD]", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to process PDF.",
+    });
+  }
 };
 
 exports.getDocuments = async (req, res) => {

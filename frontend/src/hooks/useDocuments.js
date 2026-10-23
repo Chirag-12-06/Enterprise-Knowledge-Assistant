@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { uploadDocument, getDocuments, deleteDocument } from "../services/document.service";
+import {
+  uploadDocument,
+  getDocuments,
+  deleteDocument,
+} from "../services/document.service";
 import { toast } from "sonner";
 
 export default function useDocuments() {
@@ -19,23 +23,33 @@ export default function useDocuments() {
 
   async function uploadAndRefresh(file) {
     setUploading(true);
+
     try {
-      await uploadDocument(file);
-      toast.success("Document uploaded successfully");
+      const result = await uploadDocument(file);
+
+      if (result.duplicate) {
+        toast.info(
+          result.message || "This document has already been uploaded.",
+        );
+        return;
+      }
+
+      toast.success(result.message || "Document uploaded successfully");
       await refreshDocuments();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to upload document");
+
+      toast.error(err.response?.data?.message || "Failed to upload document");
     } finally {
-    setUploading(false);
-  }
+      setUploading(false);
+    }
   }
 
   async function removeDocument(id) {
-  await deleteDocument(id);
-  toast.success("Document deleted successfully");
-  await refreshDocuments();
-}
+    await deleteDocument(id);
+    toast.success("Document deleted successfully");
+    await refreshDocuments();
+  }
 
   useEffect(() => {
     refreshDocuments();

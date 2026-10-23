@@ -3,14 +3,20 @@ const path = require("path");
 const Document = require("../models/Document");
 const Chunk = require("../models/Chunk");
 
-async function createDocument(filePath, originalFileName) {
+async function findByFileHash(fileHash) {
+  return Document.findOne({ fileHash });
+}
+
+async function createDocument(filePath, originalFileName, fileHash) {
   const title = path.parse(originalFileName).name;
 
   const document = await Document.create({
     title,
     originalFileName,
+    fileHash,
     uploadedBy: "system",
   });
+
   return document;
 }
 
@@ -37,4 +43,5 @@ module.exports = {
   getDocuments,
   updateChunkCount,
   deleteDocument,
+  findByFileHash,
 };

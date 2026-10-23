@@ -4,13 +4,17 @@ export async function uploadDocument(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await api.post("/documents", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  try {
+    const response = await api.post("/documents", formData);
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 409) {
+      return error.response.data;
+    }
+
+    throw error;
+  }
 }
 
 export async function getDocuments() {
