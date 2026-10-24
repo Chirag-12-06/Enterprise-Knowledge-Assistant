@@ -9,7 +9,7 @@ torch.set_num_interop_threads(1)
 print("EMBEDDING SERVICE: FILE START", flush=True)
 print("PYTHON:", sys.version, flush=True)
 print("TORCH VERSION:", torch.__version__, flush=True)
-
+print("CUDA AVAILABLE:", torch.cuda.is_available(), flush=True)
 
 class EmbeddingService:
     def __init__(self):
