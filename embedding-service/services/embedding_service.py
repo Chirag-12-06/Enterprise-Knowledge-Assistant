@@ -22,7 +22,7 @@ class EmbeddingService:
         if self.model is None:
             print("LOADING TOKENIZER", flush=True)
 
-            model_name = "sentence-transformers/all-MiniLM-L6-v2"
+            model_name = "sentence-transformers/paraphrase-MiniLM-L3-v2"
 
             self.tokenizer = AutoTokenizer.from_pretrained(
                 model_name
