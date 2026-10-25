@@ -2,7 +2,6 @@ import sys
 import torch
 from transformers import AutoTokenizer, AutoModel
 
-# Limit CPU threading to reduce resource overhead.
 torch.set_num_threads(1)
 torch.set_num_interop_threads(1)
 
@@ -11,18 +10,18 @@ print("PYTHON:", sys.version, flush=True)
 print("TORCH VERSION:", torch.__version__, flush=True)
 print("CUDA AVAILABLE:", torch.cuda.is_available(), flush=True)
 
+
 class EmbeddingService:
     def __init__(self):
         print("EMBEDDING SERVICE: INIT", flush=True)
-
         self.tokenizer = None
         self.model = None
 
     def load_model(self):
         if self.model is None:
-            print("LOADING TOKENIZER", flush=True)
-
             model_name = "sentence-transformers/paraphrase-MiniLM-L3-v2"
+
+            print("LOADING TOKENIZER", flush=True)
 
             self.tokenizer = AutoTokenizer.from_pretrained(
                 model_name
@@ -37,7 +36,6 @@ class EmbeddingService:
             )
 
             self.model.eval()
-
             print("MODEL LOADED", flush=True)
 
     def generate_embeddings(self, texts):
@@ -64,46 +62,25 @@ class EmbeddingService:
                 model_output = self.model(**encoded_input)
 
                 token_embeddings = model_output.last_hidden_state
-
-                attention_mask = encoded_input[
-                    "attention_mask"
-                ]
+                attention_mask = encoded_input["attention_mask"]
 
                 mask = attention_mask.unsqueeze(-1).to(
                     token_embeddings.dtype
                 )
 
-                summed_embeddings = (
-                    token_embeddings * mask
-                ).sum(dim=1)
+                summed_embeddings = (token_embeddings * mask).sum(dim=1)
 
-                token_counts = mask.sum(dim=1).clamp(
-                    min=1e-9
-                )
+                token_counts = mask.sum(dim=1).clamp(min=1e-9)
 
-                embeddings = (
-                    summed_embeddings / token_counts
-                )
+                embeddings = summed_embeddings / token_counts
 
-                # Normalize vectors for semantic similarity.
                 embeddings = torch.nn.functional.normalize(
                     embeddings,
                     p=2,
                     dim=1,
                 )
 
-            all_embeddings.extend(
-                embeddings.cpu().tolist()
-            )
-
-            del encoded_input
-            del model_output
-            del token_embeddings
-            del attention_mask
-            del mask
-            del summed_embeddings
-            del token_counts
-            del embeddings
+            all_embeddings.extend(embeddings.cpu().tolist())
 
         return all_embeddings
 

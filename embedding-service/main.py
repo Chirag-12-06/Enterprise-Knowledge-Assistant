@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-print("STEP 1: app.py started", flush=True)
+print("STEP 1: main.py started", flush=True)
 
 try:
     from models import EmbedRequest, EmbedResponse
@@ -19,13 +19,12 @@ except Exception as e:
 
 app = FastAPI(
     title="Embedding Service",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 
 @app.get("/")
 def health():
-    print("HEALTH CHECK", flush=True)
     return embedding_service.health()
 
 
@@ -35,6 +34,4 @@ def embed(request: EmbedRequest):
         request.texts
     )
 
-    return EmbedResponse(
-        embeddings=embeddings
-    )
+    return EmbedResponse(embeddings=embeddings)
