@@ -90,7 +90,7 @@ if (userMessageCount === 1) {
 
     const context = relevantChunks.map((chunk) => chunk.text).join("\n\n");
 
-    const answer = await generateAnswer(question, contex, history);
+    const answer = await generateAnswer(question, context, history);
 
     response = {
       answer,

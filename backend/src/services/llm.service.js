@@ -5,16 +5,8 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function generateAnswer(
-  question,
-  context,
-  history = []
-) {
-  const prompt = buildRagPrompt(
-    question,
-    context,
-    history
-  );
+async function generateAnswer(question, context, history = []) {
+  const prompt = buildRagPrompt(question, context, history);
 
   const response = await client.responses.create({
     model: "gpt-4.1-mini",
@@ -23,3 +15,7 @@ async function generateAnswer(
 
   return response.output_text;
 }
+
+module.exports = {
+  generateAnswer,
+};
